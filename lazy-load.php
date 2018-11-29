@@ -43,19 +43,29 @@ class LazyLoad_Images {
 		wp_enqueue_script( 'jquery-sonar', self::get_url( 'js/jquery.sonar.min.js' ), array( 'jquery' ), self::version, true );
 	}
 
-	static function add_image_placeholders( $content ) {
-		if ( ! self::is_enabled() )
-			return $content;
 
-		// Don't lazyload for feeds, previews, mobile
-		if( is_feed() || is_preview() )
-			return $content;
+	protected static function is_allowed_area() {
+		if ( ! self::is_enabled() ) {
+			return false;
+		}
+
+		// Don't lazyload for feeds, previews
+		if ( is_feed() || is_preview() ) {
+			return false;
+		}
 
 		// Don't lazyload for amp-wp content
 		if ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) {
-			return $content;
+			false;
 		}
 
+		return true;
+	}
+
+	static function add_image_placeholders( $content ) {
+		if ( ! self::is_allowed_area() ) {
+			return $content;
+		}
 		// Don't lazy-load if the content has already been run through previously
 		if ( false !== strpos( $content, 'data-lazy-src' ) )
 			return $content;

@@ -6,6 +6,9 @@
 		$( 'img[data-lazy-src]' ).bind( 'scrollin', { distance: 200 }, function() {
 			lazy_load_image( this );
 		});
+		$( '[data-lazy-background]' ).bind( 'scrollin', { distance: 300 }, function() {
+			lazy_load_background( this );
+		});
 
 		// Force load images with the class 'exclude-lazy-load'. Users can add the class to an image and the image will load directly.
 		$( 'img.exclude-lazy-load' ).each( function() {
@@ -18,6 +21,26 @@
 				lazy_load_image( this );
 			} );
 		} );
+	}
+
+	/**
+	 * Lazy load images in post content which are specified
+	 * within a background[-image] style attribute
+	 * @author Mat Lipe
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param e
+	 */
+	function lazy_load_background( img ) {
+		var $img = jQuery( img ),
+			src = $img.attr( 'data-lazy-background' );
+
+		$img.unbind( 'scrollin' ) // remove event binding
+			.removeAttr( 'data-lazy-background' )
+			.attr( 'data-lazy-loaded', 'true' );
+
+		$img.css( "background-image", 'url(' + src + ')' );
 	}
 
 	function lazy_load_image( img ) {

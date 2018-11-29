@@ -17,6 +17,7 @@ class LazyLoad_Images {
 
 	const version = '0.7';
 	protected static $enabled = true;
+	protected static $background_support = true;
 
 	static function init() {
 		if ( is_admin() )
@@ -27,12 +28,19 @@ class LazyLoad_Images {
 			return;
 		}
 
+		if ( ! apply_filters( 'lazyload_support_background_images', true ) ) {
+			self::$background_support = false;
+		}
+
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'add_scripts' ) );
 		add_action( 'wp_head', array( __CLASS__, 'setup_filters' ), 9999 ); // we don't really want to modify anything in <head> since it's mostly all metadata, e.g. OG tags
 	}
 
 	static function setup_filters() {
 		add_filter( 'the_content', array( __CLASS__, 'add_image_placeholders' ), 99 ); // run this later, so other content filters have run, including image_add_wh on WP.com
+		if ( self::$background_support ) {
+			add_filter( 'the_content', [ __CLASS__, 'add_background_placeholders' ], 99 );
+		}
 		add_filter( 'post_thumbnail_html', array( __CLASS__, 'add_image_placeholders' ), 11 );
 		add_filter( 'get_avatar', array( __CLASS__, 'add_image_placeholders' ), 11 );
 
@@ -62,7 +70,50 @@ class LazyLoad_Images {
 		return true;
 	}
 
-	static function add_image_placeholders( $content ) {
+
+	/**
+	 * Convert any elements within post content that have
+	 * style="background[-image]" to lazy load attributes so they
+	 * will be picked up by the JS and the background images will be lazy loaded.
+	 *
+	 * @author Mat Lipe
+	 *
+	 * @param $content
+	 *
+	 * @since 0.7.1
+	 *
+	 * @static
+	 *
+	 * @return string
+	 */
+	public static function add_background_placeholders( $content ) {
+		if ( ! self::is_allowed_area() ) {
+			return $content;
+		}
+
+		// Don't lazy-load if the content has already been run through previously
+		if ( false !== strpos( $content, 'data-lazy-background' ) ) {
+			return $content;
+		}
+
+		preg_match_all( '~\bstyle=[\'|"].*?\s?background(-image)?\s*:.*?(?<css>url\s?\(\s*(\'|")?(?<image>.*?)\3?\s*\))~i', $content, $matches, PREG_SET_ORDER );
+
+		if ( empty( $matches ) ) {
+			return $content;
+		}
+
+		foreach ( $matches as $match ) {
+			$bg_less_match  = str_replace( $match['css'], '', $match[0] );
+			$new_attributes = 'data-lazy-background="' . $match['image'] . '" ' . $bg_less_match;
+			$content        = str_replace( $match[0], $new_attributes, $content );
+		}
+
+		return $content;
+
+	}
+
+
+	public static function add_image_placeholders( $content ) {
 		if ( ! self::is_allowed_area() ) {
 			return $content;
 		}

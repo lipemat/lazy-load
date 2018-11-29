@@ -1,9 +1,10 @@
 === Lazy Load ===
-Contributors: batmoo, automattic, jakemgold, 10up
+Contributors: batmoo, automattic, jakemgold, 10up, mat-lipe
 Tags: lazy load, images, front-end optimization
-Requires at least: 3.2
+Requires at least: 4.7.0
 Tested up to: 5.0
-Stable tag: 0.7
+Requires PHP: 7.1.3
+Stable tag: 0.7.1
 
 Lazy load images to improve page load times and server bandwidth. Images are loaded only when visible to the user.
 

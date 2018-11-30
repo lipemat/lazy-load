@@ -9,6 +9,8 @@ rarely actually make in into the [offical WordPress plugin](https://wordpress.or
 1. Lazy load background images found in content
 2. Lazy load avatars 
 3. Exclude images using `data-lazy-disable` attributes
+4. Allow data attributes through `kses`
+5. Template tags for automatically rendering images with lazy load disabled
 
 ## Frequently Asked Questions
 

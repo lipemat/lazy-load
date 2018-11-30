@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Lazy Load
  * Description: Lazy load images to improve page load times. Uses jQuery.sonar to only load an image when it's visible in the viewport.
- * Version: 0.7.1
+ * Version: 0.7.2
  * Text Domain: lazy-load
  * Author: Automattic
  * Contributors: Mat Lipe

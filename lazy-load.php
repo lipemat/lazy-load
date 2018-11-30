@@ -247,6 +247,49 @@ function lazyload_images_add_placeholders( $content ) {
 	return LazyLoad_Images::add_image_placeholders( $content );
 }
 
+if ( ! function_exists( 'get_the_post_thumbnail_no_lazy_load' ) ) {
+	/**
+	 * Get a post thumbnail with lazy load disabled
+	 *
+	 * @param int|WP_Post  $post
+	 * @param string       $size
+	 * @param string|array $attr
+	 *
+	 * @author Mat Lipe
+	 *
+	 * @since 0.7.2
+	 *
+	 * @return string
+	 */
+	function get_the_post_thumbnail_no_lazy_load( $post = null, $size = 'post-thumbnail', $attr = '' ) {
+		$attr                      = (array) $attr;
+		$attr['data-lazy-disable'] = 'true';
+
+		return get_the_post_thumbnail( $post, $size, $attr );
+	}
+
+	/**
+	 * Get an HTML img element with lazy load disabled
+	 *
+	 * @param int          $attachment_id
+	 * @param string       $size
+	 * @param bool         $icon
+	 * @param string|array $attr
+	 *
+	 * @author Mat Lipe
+	 *
+	 * @since 0.7.2
+	 *
+	 * @return string
+	 */
+	function wp_get_attachment_image_no_lazy_load( $attachment_id, $size = 'thumbnail', $icon = false, $attr = '' ) {
+		$attr                      = (array) $attr;
+		$attr['data-lazy-disable'] = 'true';
+
+		return wp_get_attachment_image( $attachment_id, $size, $icon, $attr );
+	}
+
+}
 add_action( 'init', array( 'LazyLoad_Images', 'init' ) );
 
 endif;

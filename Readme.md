@@ -8,8 +8,22 @@ rarely actually make in into the [offical WordPress plugin](https://wordpress.or
 ## Enhancements (non exhaustive)
 1. Lazy load background images found in content
 2. Lazy load avatars 
+3. Exclude images using `data-lazy-disable` attributes
 
 ## Frequently Asked Questions
+
+### How do I exclude images
+Add a `lazy-load-disable` attribute to any image to exclude it. Attributes may be passed to common image functions like `get_the_post_thumbnail()` or within the markup of content.
+
+```php
+get_the_post_thumbnail($id, 'full', [ 'lazy-load-disable' => 'true' ] );
+```
+
+For background images, add the `lazy-load-disable` as part of the `style` attribute.
+
+```html
+<div style="lazy-load-disable;background: url( '../bg.png' );">Content</div>
+```
 
 ### How do I change the placeholder image
 

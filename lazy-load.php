@@ -78,6 +78,8 @@ class LazyLoad_Images {
 	 * style="background[-image]" to lazy load attributes so they
 	 * will be picked up by the JS and the background images will be lazy loaded.
 	 *
+	 * To exclude a background image, add a `lazy-load-disable;` within the style attribute.
+	 *
 	 * @author Mat Lipe
 	 *
 	 * @param $content
@@ -105,6 +107,9 @@ class LazyLoad_Images {
 		}
 
 		foreach ( $matches as $match ) {
+			if ( false !== strpos( $match[0], 'lazy-load-disable' ) ){
+				continue;
+			}
 			$bg_less_match  = str_replace( $match['css'], '', $match[0] );
 			$new_attributes = 'data-lazy-background="' . $match['image'] . '" ' . $bg_less_match;
 			$content        = str_replace( $match[0], $new_attributes, $content );
@@ -129,9 +134,29 @@ class LazyLoad_Images {
 		return $content;
 	}
 
-	static function process_image( $matches ) {
+
+	/**
+	 * Change image attributes to support the lazy loading
+	 *
+	 * To disable a particular image, add a `data-lazy-disable` as an
+	 * image attribute
+	 *
+	 * @since 0.6.1
+	 * @since 0.7.2 - support disabling per image
+	 *
+	 * @param array $matches
+	 *
+	 * @static
+	 *
+	 * @return string
+	 */
+	public static function process_image( $matches ) {
 		$old_attributes_str = $matches[2];
 		$old_attributes_kses_hair = wp_kses_hair( $old_attributes_str, wp_allowed_protocols() );
+		//skip any image with a 'data-lazy-disable' attribute
+		if ( isset( $old_attributes_kses_hair['data-lazy-disable'] ) ) {
+			return $matches[0];
+		}
 
 		if ( empty( $old_attributes_kses_hair['src'] ) ) {
 			return $matches[0];

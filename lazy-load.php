@@ -38,7 +38,7 @@ class LazyLoad_Images {
 		add_action( 'wp_head', array( __CLASS__, 'setup_filters' ), 9999 ); // we don't really want to modify anything in <head> since it's mostly all metadata, e.g. OG tags
 	}
 
-	static function setup_filters() {
+	public static function setup_filters() {
 		add_filter( 'the_content', array( __CLASS__, 'add_image_placeholders' ), 99 ); // run this later, so other content filters have run, including image_add_wh on WP.com
 		if ( self::$background_support ) {
 			add_filter( 'the_content', [ __CLASS__, 'add_background_placeholders' ], 99 );
@@ -46,6 +46,30 @@ class LazyLoad_Images {
 		add_filter( 'post_thumbnail_html', array( __CLASS__, 'add_image_placeholders' ), 11 );
 		add_filter( 'get_avatar', array( __CLASS__, 'add_image_placeholders' ), 11 );
 
+		add_filter( 'wp_kses_allowed_html', array( __CLASS__, 'allow_data_attributes' ) );
+
+	}
+
+
+	/**
+	 * Explicitly allow the required data attributes through kses to handle
+	 * caches where the content is put through kses before outputted.
+	 *
+	 * @param array $allowed
+	 *
+	 * @author Mat Lipe
+	 *
+	 * @since 0.7.2
+	 *
+	 * @static
+	 *
+	 * @return mixed
+	 */
+	public static function allow_data_attributes( $allowed ) {
+		$allowed['img']['data-lazy-disable'] = [];
+		$allowed['img']['data-lazy-src']     = [];
+
+		return $allowed;
 	}
 
 	static function add_scripts() {

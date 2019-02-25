@@ -27,6 +27,16 @@ For background images, add the `lazy-load-disable` as part of the `style` attrib
 <div style="lazy-load-disable;background: url( '../bg.png' );">Content</div>
 ```
 
+Use one of the temlate tags to render an image excluded from lazy-loading.
+
+```php
+get_the_post_thumbnail_no_lazy_load( $id );
+```
+or
+```php
+wp_get_attachment_image_no_lazy_load( $id );
+```
+
 ### How do I change the placeholder image
 
 ```php

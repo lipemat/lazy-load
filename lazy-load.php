@@ -17,7 +17,7 @@ if ( ! class_exists( 'LazyLoad_Images' ) ) :
 
 class LazyLoad_Images {
 
-	const version = '0.7.1';
+	const version = '0.7.2';
 	protected static $enabled = true;
 	protected static $background_support = true;
 

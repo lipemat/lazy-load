@@ -10,11 +10,12 @@ rarely actually make in into the [offical WordPress plugin](https://wordpress.or
 2. Lazy load avatars 
 3. Exclude images using `data-lazy-disable` attributes
 4. Allow data attributes through `kses`
-5. Template tags for automatically rendering images with lazy load disabled
+5. Template tags for automatically rendering images with lazy load disabled.
+6. Support for filtering the distance before the images are loaded.
 
 ## Frequently Asked Questions
 
-### How do I exclude images
+### How do I exclude images?
 Add a `lazy-load-disable` attribute to any image to exclude it. Attributes may be passed to common image functions like `get_the_post_thumbnail()` or within the markup of content.
 
 ```php
@@ -36,8 +37,19 @@ or
 ```php
 wp_get_attachment_image_no_lazy_load( $id );
 ```
+### How do I make the images load sooner?
 
-### How do I change the placeholder image
+Use the filter for changing the distance.
+
+```php
+add_filter( 'wpcom-lazy-load-images/config', function( $config ) {
+	$config['distance'] = 1000;
+	$config['distanceBG'] = 1000;
+	return $config;
+});
+```
+
+### How do I change the placeholder image?
 
 ```php
 add_filter( 'lazyload_images_placeholder_image', 'my_custom_lazyload_placeholder_image' );

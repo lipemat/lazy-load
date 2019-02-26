@@ -75,6 +75,11 @@ class LazyLoad_Images {
 	static function add_scripts() {
 		wp_enqueue_script( 'wpcom-lazy-load-images',  self::get_url( 'js/lazy-load.js' ), array( 'jquery', 'jquery-sonar' ), self::version, true );
 		wp_enqueue_script( 'jquery-sonar', self::get_url( 'js/jquery.sonar.min.js' ), array( 'jquery' ), self::version, true );
+
+		wp_localize_script( 'wpcom-lazy-load-images', 'WPComLazyLoadConfig', apply_filters( 'wpcom-lazy-load-images/config', array(
+			'distance'   => 200,
+			'distanceBG' => 300,
+		) ) );
 	}
 
 

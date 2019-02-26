@@ -1,12 +1,13 @@
-(function($) {
+/* globals WPComLazyLoadConfig */
+(function($, config) {
 	lazy_load_init();
 	$( 'body' ).bind( 'post-load', lazy_load_init ); // Work with WP.com infinite scroll
 
 	function lazy_load_init() {
-		$( 'img[data-lazy-src]' ).bind( 'scrollin', { distance: 200 }, function() {
+		$( 'img[data-lazy-src]' ).bind( 'scrollin', { distance: parseInt( config.distance ) }, function() {
 			lazy_load_image( this );
 		});
-		$( '[data-lazy-background]' ).bind( 'scrollin', { distance: 300 }, function() {
+		$( '[data-lazy-background]' ).bind( 'scrollin', { distance: parseInt( config.distanceBG )}, function() {
 			lazy_load_background( this );
 		});
 
@@ -68,4 +69,4 @@
 		}
 		$img.fadeIn();
 	}
-})(jQuery);
+})(jQuery, WPComLazyLoadConfig);
